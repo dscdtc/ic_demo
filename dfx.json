@@ -1,0 +1,39 @@
+{
+  "canisters": {
+    "hirc_backend": {
+      "main": "src/hirc_backend/counter.mo",
+      "type": "motoko"
+    },
+    "hirc_backend2": {
+      "main": "src/hirc_backend/microblog.mo",
+      "type": "motoko"
+    },
+    "hirc_frontend": {
+      "dependencies": [
+        "hirc_backend"
+      ],
+      "frontend": {
+        "entrypoint": "src/hirc_frontend/src/index.html"
+      },
+      "source": [
+        "src/hirc_frontend/assets",
+        "dist/hirc_frontend/"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "dfx": "0.11.2",
+  "networks": {
+    "local": {
+      "bind": "127.0.0.1:8000",
+      "type": "ephemeral"
+    }
+  },
+  "version": 1
+}
