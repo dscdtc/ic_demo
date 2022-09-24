@@ -9,38 +9,24 @@
     <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css">
   </head>
   <body>
-    <header><h1>Microblog</h1></header>
+    <header>
+      <h1>
+        Microblog
+      </h1>
+    </header>
     <main>
-      <label for="message">What do you want to post?</label>
+      <label for="message">What do you want to send</label>
       <textarea id="message"></textarea>
-      <br>
-      <label for="otp">OTP(do not input)</label>
-      <br>
-      <input id = "otp"></input>
-      <br>
+      <label for="otp"></label>
+      <input id="otp"></input>
       <button id="post">Post</button>
       &nbsp;<span id="error"></span>
-      <br>
-      <label for="message" style="color:#66c21a";>As followed is what you have posted ：(You need refresh this webpage to see the new post) </label>
+      <p>My Posts: </p>
       <section id="posts"></section>
-      <br>
-      <!-- 
-      <label for="message">Who do you want to follow?(input canister id)</label>
-      <textarea id="followee"></textarea>
-      <br>
-      <button id="follow">Follow</button>
-      <br>
-      -->
-      
-      
-      <label for="message" style="color:#66c21a";>As followed is who you have followed ：(click to see all his posts)(You might wait for several seconds)</label>
-      <section id="followedname"></section>
-      <br>
-      <label for="message" style="color:#66c21a";>As followed is all the posts of the rapper you have clicked on：</label>
-      <section id="allposts"></section>
-      <br>
-      <label for="message" style="color:#66c21a";>As followed is the timeline you have followed ：</label>
-      <section id="timeline"></section>
+      <p>My Follows: </p>
+      <section id="follows"></section>
+      <p>Their Posts: </p>
+      <section id="follow_post" author=""></section>
     </main>
   </body>
 </html>

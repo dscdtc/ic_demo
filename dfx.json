@@ -4,7 +4,19 @@
       "main": "src/hirc_backend/counter.mo",
       "type": "motoko"
     },
-    "hirc_backend2": {
+    "microblog": {
+      "main": "src/hirc_backend/microblog.mo",
+      "type": "motoko"
+    },
+    "microblog1": {
+      "main": "src/hirc_backend/microblog.mo",
+      "type": "motoko"
+    },
+    "microblog2": {
+      "main": "src/hirc_backend/microblog.mo",
+      "type": "motoko"
+    },
+    "microblog3": {
       "main": "src/hirc_backend/microblog.mo",
       "type": "motoko"
     },

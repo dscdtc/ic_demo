@@ -1,91 +1,88 @@
 import { microblog } from "../../declarations/microblog";
 
-
-async function post() {
-  let post_button = document.getElementById("post");
-  post_button.disabled = true;
-  let error = document.getElementById("error");
-  error.innerText = "";
-  let textarea = document.getElementById("message");
-  let otp = document.getElementById("otp").value;
-  let text = textarea.value;
-  try {
-    await microblog.post(text);
-    textarea.value = "";
-  } catch (err) {
-    console.log(err)
-    error.innerText = "Post Failed!";
+async function post(){
+  let post_button = document.getElementById("post")
+  let error = document.getElementById("error")
+  error.innerText = ""
+  post_button.disabled = true
+  let textarea = document.getElementById("message")
+  let otp = document.getElementById("otp").value
+  let text = textarea.value
+  try{
+    await microblog.post(otp,text)
+    textarea.value = ""
+  }catch(err){
+    error.innerText = "post fail"
   }
-
-  post_button.disabled = false;
+  post_button.disabled = false
 }
-var num_posts = 0;
-async function load_posts() {
-  let posts_section = document.getElementById("posts");
-  let posts = await microblog.posts(0);
-  if (num_posts == posts.length) return;
-  posts_section.replaceChildren([]);
-  num_posts = posts.length;
-  for (var i = 0; i < posts.length; i++) {
-    let post = document.createElement("p");
-    post.innerText = posts[i].text
+
+var num_posts=0
+var num_follows=0
+var timeline = []
+
+async function load_posts(){
+  let posts_section = document.getElementById("posts")
+  let posts = await microblog.posts(0)
+  if (num_posts == posts.length) return
+  num_posts = posts.length
+  posts_section.replaceChildren([])
+  for ( var i=0;i<posts.length;i++){
+    let post = document.createElement("p")
+    post.innerText = posts[i]['text']
     posts_section.appendChild(post)
   }
 }
 
-var num_follows = 0;
-async function load_follows() {
-  let follows_section = document.getElementById("followedname");
-  let follownames = await microblog.followsname();//[Text]
-  let allposts_section = document.getElementById("allposts");
-  if (num_follows == follownames.length) return;
-  follows_section.replaceChildren([]);
-  num_follows = follownames.length;
-
-  for (var i = 0; i < follownames.length; i++) {
-    let followname = document.createElement("button");
-    followname.innerText = follownames[i];
-    followname.onclick = async function () {
-      allposts_section.replaceChildren([]);
-      let allposts = await microblog.allposts(followname.innerText);
-      let clickon = document.createElement("p");
-      clickon.innerText = "You clicked on " + followname.innerText + ". His posts as followed : ";
-      allposts_section.appendChild(clickon);
-      for (var j = 0; j < allposts.length; j++) {
-        let allpost = document.createElement("p");
-        allpost.innerText = allposts[j].text;
-        console.log("innerText: " + allpost.innerText);
-        allposts_section.appendChild(allpost);
-      };
-    };
-    follows_section.appendChild(followname);
-
+function show_posts(author_name){
+  let follow_post = document.getElementById("follow_post")
+  let current_name = follow_post.getAttribute("author")
+  if(current_name == author_name) return
+  follow_post.setAttribute("author",author_name)
+  follow_post.replaceChildren([])
+  let author_post = []
+  for (var i=0;i<timeline.length;i++){
+    if(timeline[i]['author'] == author_name) author_post.push(timeline[i])
+  }
+  for (var i=0;i<author_post.length;i++){
+    let one_post = document.createElement("p")
+    let post_time = new Date(Math.floor(Number(author_post[i]['time'])) / 1000000).toLocaleString()
+    one_post.innerText = post_time + "   " + author_post[i]['text']
+    follow_post.appendChild(one_post)
   }
 }
 
-
-var num_timelines = 0;
-async function load_timelines() {
-  let timelines_section = document.getElementById("timeline");
-  let timeline = await microblog.timeline(0);
-  if (num_timelines == timeline.length) return;
-  timelines_section.replaceChildren([]);
-  num_timelines = timeline.length;
-  for (var i = 0; i < timeline.length; i++) {
-    let timelineElement = document.createElement("p");
-    timelineElement.innerText = " Author: " + timeline[i].author + "\n message: "
-      + timeline[i].text + "\n time: " + timeline[i].time;
-    timelines_section.appendChild(timelineElement)
+async function load_follows(){
+  let follow_section = document.getElementById("follows")
+  let follow_name = await microblog.follows_name()
+  if (num_follows == follow_name.length) return
+  num_follows = follow_name.length
+  follow_section.replaceChildren([])
+  for ( var i=0;i<follow_name.length;i++){
+    let one_follow = document.createElement("button")
+    one_follow.innerText = follow_name[i][0]
+    one_follow.onclick = function(){
+      show_posts(one_follow.innerText)
+    }
+    follow_section.appendChild(one_follow)
   }
 }
 
-function load() {
-  let post_button = document.getElementById("post");
+async function load_timeline(){
+  let all_msg = await microblog.timeline(0)
+  if (timeline.length == all_msg.length) return
+  timeline = all_msg
+}
+
+function load(){
+  let post_button = document.getElementById("post")
   post_button.onclick = post;
-  load_posts();
-  let follow_button = document.getElementById("follow");
-  load_follows();
-  load_timelines();
+  load_posts()
+  setInterval(load_posts,3000)
+  load_follows()
+  setInterval(load_follows,4000)
+  load_timeline()
+  setInterval(load_timeline,3000)
 }
 
 window.onload = load
